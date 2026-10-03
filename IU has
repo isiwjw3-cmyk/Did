@@ -1,0 +1,520 @@
+-- =======================================================
+-- IU Hub - Ultimate Hacker Script (Delta Executor Ready)
+-- =======================================================
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+local Camera = Workspace.CurrentCamera
+
+-- ScreenGui Setup
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "IUHub_GUI"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+
+-- -------------------------------------------------------
+-- 1. LOADING SCREEN (นับ 1-100%)
+-- -------------------------------------------------------
+local LoadFrame = Instance.new("Frame")
+LoadFrame.Size = UDim2.new(1, 0, 1, 0)
+LoadFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+LoadFrame.Parent = ScreenGui
+
+local LoadTitle = Instance.new("TextLabel")
+LoadTitle.Size = UDim2.new(0, 400, 0, 50)
+LoadTitle.Position = UDim2.new(0.5, -200, 0.4, -25)
+LoadTitle.BackgroundTransparency = 1
+LoadTitle.Text = "IU HUB - HACKER SYSTEM"
+LoadTitle.TextColor3 = Color3.fromRGB(0, 255, 128)
+LoadTitle.TextSize = 24
+LoadTitle.Font = Enum.Font.Code
+LoadTitle.Parent = LoadFrame
+
+local LoadSub = Instance.new("TextLabel")
+LoadSub.Size = UDim2.new(0, 400, 0, 30)
+LoadSub.Position = UDim2.new(0.5, -200, 0.45, 10)
+LoadSub.BackgroundTransparency = 1
+LoadSub.Text = "กำลังโหลดทรัพยากร... 0%"
+LoadSub.TextColor3 = Color3.fromRGB(255, 255, 255)
+LoadSub.TextSize = 16
+LoadSub.Font = Enum.Font.Code
+LoadSub.Parent = LoadFrame
+
+-- Loading Animation Loop
+for i = 1, 100 do
+    LoadSub.Text = "กำลังโหลดทรัพยากร... " .. i .. "%"
+    task.wait(0.015)
+end
+LoadFrame:Destroy()
+
+-- -------------------------------------------------------
+-- 2. MAIN UI SETUP (Hacker Style)
+-- -------------------------------------------------------
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 480, 0, 350)
+MainFrame.Position = UDim2.new(0.5, -240, 0.5, -175)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 18)
+MainFrame.BorderSizePixel = 2
+MainFrame.BorderColor3 = Color3.fromRGB(0, 255, 128)
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Parent = ScreenGui
+
+-- UI Title Bar
+local TitleBar = Instance.new("TextLabel")
+TitleBar.Size = UDim2.new(1, 0, 0, 35)
+TitleBar.BackgroundColor3 = Color3.fromRGB(8, 8, 10)
+TitleBar.Text = "  [IU HUB] - SYSTEM MATRIX"
+TitleBar.TextColor3 = Color3.fromRGB(0, 255, 128)
+TitleBar.TextSize = 18
+TitleBar.Font = Enum.Font.Code
+TitleBar.TextXAlignment = Enum.TextXAlignment.Left
+TitleBar.Parent = MainFrame
+
+-- Toggle Menu Button (สี่เหลี่ยมผืนผ้าเล็กๆ)
+local OpenBtn = Instance.new("TextButton")
+OpenBtn.Size = UDim2.new(0, 80, 0, 28)
+OpenBtn.Position = UDim2.new(0, 10, 0, 10)
+OpenBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+OpenBtn.BorderColor3 = Color3.fromRGB(0, 255, 128)
+OpenBtn.BorderSizePixel = 1
+OpenBtn.Text = "IU HUB"
+OpenBtn.TextColor3 = Color3.fromRGB(0, 255, 128)
+OpenBtn.Font = Enum.Font.Code
+OpenBtn.TextSize = 14
+OpenBtn.Parent = ScreenGui
+
+OpenBtn.MouseButton1Click:Connect(function()
+    MainFrame.Visible = not MainFrame.Visible
+end)
+
+-- Map Selector (Dropdown System)
+local MapLabel = Instance.new("TextLabel")
+MapLabel.Size = UDim2.new(0, 100, 0, 25)
+MapLabel.Position = UDim2.new(0, 10, 0, 45)
+MapLabel.BackgroundTransparency = 1
+MapLabel.Text = "เลือกแมพ:"
+MapLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+MapLabel.Font = Enum.Font.Code
+MapLabel.TextSize = 14
+MapLabel.TextXAlignment = Enum.TextXAlignment.Left
+MapLabel.Parent = MainFrame
+
+local MapBtn = Instance.new("TextButton")
+MapBtn.Size = UDim2.new(0, 200, 0, 25)
+MapBtn.Position = UDim2.new(0, 100, 0, 45)
+MapBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+MapBtn.BorderColor3 = Color3.fromRGB(0, 255, 128)
+MapBtn.Text = "ภัยพิบัติธรรมชาติ ▼"
+MapBtn.TextColor3 = Color3.fromRGB(0, 255, 128)
+MapBtn.Font = Enum.Font.Code
+MapBtn.TextSize = 14
+MapBtn.Parent = MainFrame
+
+-- Scroll Containers for Functions
+local DisasterFrame = Instance.new("ScrollingFrame")
+DisasterFrame.Size = UDim2.new(1, -20, 1, -90)
+DisasterFrame.Position = UDim2.new(0, 10, 0, 80)
+DisasterFrame.BackgroundTransparency = 1
+DisasterFrame.CanvasSize = UDim2.new(0, 0, 0, 450)
+DisasterFrame.ScrollBarThickness = 4
+DisasterFrame.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 128)
+DisasterFrame.Parent = MainFrame
+
+local MM2Frame = Instance.new("ScrollingFrame")
+MM2Frame.Size = UDim2.new(1, -20, 1, -90)
+MM2Frame.Position = UDim2.new(0, 10, 0, 80)
+MM2Frame.BackgroundTransparency = 1
+MM2Frame.CanvasSize = UDim2.new(0, 0, 0, 600)
+MM2Frame.ScrollBarThickness = 4
+MM2Frame.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 128)
+MM2Frame.Visible = false
+MM2Frame.Parent = MainFrame
+
+-- Dropdown Logic
+local currentMap = "Disaster"
+MapBtn.MouseButton1Click:Connect(function()
+    if currentMap == "Disaster" then
+        currentMap = "MM2"
+        MapBtn.Text = "MM2 ▼"
+        DisasterFrame.Visible = false
+        MM2Frame.Visible = true
+    else
+        currentMap = "Disaster"
+        MapBtn.Text = "ภัยพิบัติธรรมชาติ ▼"
+        MM2Frame.Visible = false
+        DisasterFrame.Visible = true
+    end
+end)
+
+-- Helper UI Generator
+local function createToggle(parent, yPos, text, callback)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, -10, 0, 30)
+    btn.Position = UDim2.new(0, 5, 0, yPos)
+    btn.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    btn.BorderColor3 = Color3.fromRGB(60, 60, 60)
+    btn.Text = "[OFF] " .. text
+    btn.TextColor3 = Color3.fromRGB(200, 200, 200)
+    btn.Font = Enum.Font.Code
+    btn.TextSize = 13
+    btn.Parent = parent
+
+    local state = false
+    btn.MouseButton1Click:Connect(function()
+        state = not state
+        if state then
+            btn.BackgroundColor3 = Color3.fromRGB(180, 0, 0) -- เปิดเป็นสีแดง
+            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            btn.Text = "[ON] " .. text
+        else
+            btn.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+            btn.TextColor3 = Color3.fromRGB(200, 200, 200)
+            btn.Text = "[OFF] " .. text
+        end
+        callback(state)
+    end)
+    return btn
+end
+
+-- -------------------------------------------------------
+-- 3. MOBILE/PC FLY CONTROLLER (ปุ่ม ↑ ↓)
+-- -------------------------------------------------------
+local FlyControls = Instance.new("Frame")
+FlyControls.Size = UDim2.new(0, 60, 0, 130)
+FlyControls.Position = UDim2.new(0.85, 0, 0.5, -65)
+FlyControls.BackgroundTransparency = 1
+FlyControls.Visible = false
+FlyControls.Parent = ScreenGui
+
+local UpBtn = Instance.new("TextButton")
+UpBtn.Size = UDim2.new(0, 50, 0, 50)
+UpBtn.Position = UDim2.new(0, 5, 0, 0)
+UpBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+UpBtn.BorderColor3 = Color3.fromRGB(0, 255, 128)
+UpBtn.Text = "↑"
+UpBtn.TextColor3 = Color3.fromRGB(0, 255, 128)
+UpBtn.TextSize = 25
+UpBtn.Parent = FlyControls
+
+local DownBtn = Instance.new("TextButton")
+DownBtn.Size = UDim2.new(0, 50, 0, 50)
+DownBtn.Position = UDim2.new(0, 5, 0, 60)
+DownBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+DownBtn.BorderColor3 = Color3.fromRGB(0, 255, 128)
+DownBtn.Text = "↓"
+DownBtn.TextColor3 = Color3.fromRGB(0, 255, 128)
+DownBtn.TextSize = 25
+DownBtn.Parent = FlyControls
+
+local flying = false
+local flySpeed = 50
+local upPressed, downPressed = false, false
+
+UpBtn.MouseButton1Down:Connect(function() upPressed = true end)
+UpBtn.MouseButton1Up:Connect(function() upPressed = false end)
+DownBtn.MouseButton1Down:Connect(function() downPressed = true end)
+DownBtn.MouseButton1Up:Connect(function() downPressed = false end)
+
+local function enableFly(status, customSpeed)
+    flying = status
+    FlyControls.Visible = status
+    if customSpeed then flySpeed = customSpeed end
+    
+    local char = LocalPlayer.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+    local hrp = char.HumanoidRootPart
+
+    if flying then
+        local bv = Instance.new("BodyVelocity")
+        bv.Name = "IU_FlyVelocity"
+        bv.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+        bv.Velocity = Vector3.new(0, 0, 0)
+        bv.Parent = hrp
+
+        task.spawn(function()
+            while flying do
+                RunService.RenderStepped:Wait()
+                local moveDir = char.Humanoid.MoveDirection
+                local yVel = 0
+                if upPressed then yVel = flySpeed end
+                if downPressed then yVel = -flySpeed end
+                bv.Velocity = (moveDir * flySpeed) + Vector3.new(0, yVel, 0)
+            end
+            bv:Destroy()
+        end)
+    end
+end
+
+-- =======================================================
+-- 4. FUNCTIONS: ภัยพิบัติธรรมชาติ
+-- =======================================================
+
+-- บิน (ภัยพิบัติ)
+createToggle(DisasterFrame, 10, "สำหรับ ภัยพิบัติธรรมชาติ: บิน", function(val)
+    enableFly(val, 50)
+end)
+
+-- ถีบ (Kick Player System)
+local KickFrame = Instance.new("Frame")
+KickFrame.Size = UDim2.new(1, -10, 0, 110)
+KickFrame.Position = UDim2.new(0, 5, 0, 50)
+KickFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+KickFrame.BorderColor3 = Color3.fromRGB(50, 50, 50)
+KickFrame.Parent = DisasterFrame
+
+local KickLabel = Instance.new("TextLabel")
+KickLabel.Size = UDim2.new(1, 0, 0, 20)
+KickLabel.Text = "สำหรับ ภัยพิบัติธรรมชาติ: ถีบผู้เล่น"
+KickLabel.TextColor3 = Color3.fromRGB(0, 255, 128)
+KickLabel.Font = Enum.Font.Code
+KickLabel.BackgroundTransparency = 1
+KickLabel.Parent = KickFrame
+
+local TargetBox = Instance.new("TextBox")
+TargetBox.Size = UDim2.new(0, 250, 0, 25)
+TargetBox.Position = UDim2.new(0, 10, 0, 30)
+TargetBox.PlaceholderText = "พิมพ์ชื่อผู้เล่น..."
+TargetBox.Text = ""
+TargetBox.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+TargetBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TargetBox.Font = Enum.Font.Code
+TargetBox.Parent = KickFrame
+
+local GoBtn = Instance.new("TextButton")
+GoBtn.Size = UDim2.new(0, 80, 0, 25)
+GoBtn.Position = UDim2.new(0, 270, 0, 30)
+GoBtn.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
+GoBtn.Text = "GO"
+GoBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+GoBtn.Font = Enum.Font.Code
+GoBtn.Parent = KickFrame
+
+GoBtn.MouseButton1Click:Connect(function()
+    local targetName = TargetBox.Text
+    local targetPlayer = nil
+    for _, p in pairs(Players:GetPlayers()) do
+        if string.find(p.Name:lower(), targetName:lower()) or string.find(p.DisplayName:lower(), targetName:lower()) then
+            targetPlayer = p
+            break
+        end
+    end
+    
+    if targetPlayer and targetPlayer.Character and LocalPlayer.Character then
+        local myHrp = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        local tHrp = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if myHrp and tHrp then
+            -- Bouncing Kick Logic (พุ่งชนด้วยความเร็ว 999)
+            local bv = Instance.new("BodyVelocity")
+            bv.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+            bv.Velocity = (tHrp.Position - myHrp.Position).Unit * 999
+            bv.Parent = myHrp
+            task.wait(0.2)
+            bv:Destroy()
+        end
+    end
+end)
+
+-- บังคับบล็อก (Bring/Rotate Blocks)
+local orbitBlocks = false
+local orbitRadius = 20
+createToggle(DisasterFrame, 170, "สำหรับ ภัยพิบัติธรรมชาติ: บังคับบล็อก (100 บล็อก)", function(val)
+    orbitBlocks = val
+    if orbitBlocks then
+        task.spawn(function()
+            local angle = 0
+            while orbitBlocks do
+                RunService.RenderStepped:Wait()
+                angle = angle + 0.05
+                local myHrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                if myHrp then
+                    local parts = Workspace:GetDescendants()
+                    local count = 0
+                    for _, v in pairs(parts) do
+                        if v:IsA("BasePart") and not v.Anchored and not v:IsDescendantOf(LocalPlayer.Character) then
+                            count = count + 1
+                            if count <= 100 then
+                                local offset = Vector3.new(math.cos(angle + count) * orbitRadius, 2, math.sin(angle + count) * orbitRadius)
+                                v.CFrame = myHrp.CFrame + offset
+                            end
+                        end
+                    end
+                end
+            end
+        end)
+    end
+end)
+
+-- =======================================================
+-- 5. FUNCTIONS: MM2
+-- =======================================================
+
+-- ตรวจจับบทบาท (ESP)
+local espActive = false
+local function applyESP()
+    for _, p in pairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer and p.Character then
+            local char = p.Character
+            local highlight = char:FindFirstChild("IU_ESP") or Instance.new("Highlight")
+            highlight.Name = "IU_ESP"
+            highlight.Parent = char
+            highlight.Enabled = espActive
+
+            -- ตรวจสอบไอเทมมีด/ปืน
+            local isMurderer = char:FindFirstChild("Knife") or p.Backpack:FindFirstChild("Knife")
+            local isSheriff = char:FindFirstChild("Gun") or p.Backpack:FindFirstChild("Gun")
+
+            if isMurderer then
+                highlight.FillColor = Color3.fromRGB(255, 0, 0) -- แดง
+            elseif isSheriff then
+                highlight.FillColor = Color3.fromRGB(0, 0, 255) -- น้ำเงิน
+            else
+                highlight.FillColor = Color3.fromRGB(0, 255, 0) -- เขียว
+            end
+        end
+    end
+end
+
+createToggle(MM2Frame, 10, "สำหรับ MM2: ตรวจจับบทบาท", function(val)
+    espActive = val
+    if val then
+        task.spawn(function()
+            while espActive do
+                applyESP()
+                task.wait(1)
+            end
+            for _, p in pairs(Players:GetPlayers()) do
+                if p.Character and p.Character:FindFirstChild("IU_ESP") then
+                    p.Character.IU_ESP:Destroy()
+                end
+            end
+        end)
+    end
+end)
+
+-- บิน + ปรับความเร็ว (MM2)
+local flySpeedMM2 = 50
+createToggle(MM2Frame, 50, "สำหรับ MM2: บิน", function(val)
+    enableFly(val, flySpeedMM2)
+end)
+
+local SpeedFlyBox = Instance.new("TextBox")
+SpeedFlyBox.Size = UDim2.new(1, -10, 0, 25)
+SpeedFlyBox.Position = UDim2.new(0, 5, 0, 90)
+SpeedFlyBox.PlaceholderText = "ปรับความเร็วบิน (เช่น 1-99999)..."
+SpeedFlyBox.Text = ""
+SpeedFlyBox.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+SpeedFlyBox.TextColor3 = Color3.fromRGB(0, 255, 128)
+SpeedFlyBox.Font = Enum.Font.Code
+SpeedFlyBox.Parent = MM2Frame
+SpeedFlyBox.FocusLost:Connect(function()
+    local num = tonumber(SpeedFlyBox.Text)
+    if num then flySpeedMM2 = num end
+end)
+
+-- เก็บปืน (Teleport Gun)
+local GrabGunBtn = Instance.new("TextButton")
+GrabGunBtn.Size = UDim2.new(1, -10, 0, 30)
+GrabGunBtn.Position = UDim2.new(0, 5, 0, 125)
+GrabGunBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+GrabGunBtn.Text = "สำหรับ MM2: เก็บปืน (วาร์ปเก็บ)"
+GrabGunBtn.TextColor3 = Color3.fromRGB(0, 255, 128)
+GrabGunBtn.Font = Enum.Font.Code
+GrabGunBtn.Parent = MM2Frame
+
+GrabGunBtn.MouseButton1Click:Connect(function()
+    local char = LocalPlayer.Character
+    local hrp = char and char:FindFirstChild("HumanoidRootPart")
+    local gunDrop = Workspace:FindFirstChild("GunDrop", true)
+    if hrp and gunDrop then
+        local oldCFrame = hrp.CFrame
+        hrp.CFrame = gunDrop.CFrame
+        task.wait(0.2)
+        hrp.CFrame = oldCFrame
+    end
+end)
+
+-- ล็อคฆาตกร (Aimbot Camera)
+local lockMurd = false
+createToggle(MM2Frame, 165, "สำหรับ MM2: ล็อคฆาตกร", function(val)
+    lockMurd = val
+    task.spawn(function()
+        while lockMurd do
+            RunService.RenderStepped:Wait()
+            for _, p in pairs(Players:GetPlayers()) do
+                if p ~= LocalPlayer and p.Character and (p.Character:FindFirstChild("Knife") or p.Backpack:FindFirstChild("Knife")) then
+                    Camera.CFrame = CFrame.new(Camera.CFrame.Position, p.Character.HumanoidRootPart.Position)
+                end
+            end
+        end
+    end)
+end)
+
+-- วิ่งเร็ว (Speed Hack)
+local WalkBox = Instance.new("TextBox")
+WalkBox.Size = UDim2.new(1, -10, 0, 25)
+WalkBox.Position = UDim2.new(0, 5, 0, 205)
+WalkBox.PlaceholderText = "สำหรับ MM2: ปรับความเร็ววิ่ง (1-300)..."
+WalkBox.Text = ""
+WalkBox.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+WalkBox.TextColor3 = Color3.fromRGB(0, 255, 128)
+WalkBox.Font = Enum.Font.Code
+WalkBox.Parent = MM2Frame
+
+WalkBox.FocusLost:Connect(function()
+    local val = tonumber(WalkBox.Text)
+    if val and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.WalkSpeed = val
+    end
+end)
+
+-- ทะลุกำแพง (Noclip)
+local noclip = false
+createToggle(MM2Frame, 240, "สำหรับ MM2: ทะลุกำแพง", function(val)
+    noclip = val
+    RunService.Stepped:Connect(function()
+        if noclip and LocalPlayer.Character then
+            for _, v in pairs(LocalPlayer.Character:GetChildren()) do
+                if v:IsA("BasePart") then v.CanCollide = false end
+            end
+        end
+    end)
+end)
+
+-- ล็อคฆาตกร 100% (Kill Murderer)
+createToggle(MM2Frame, 280, "สำหรับ MM2: ล็อคฆาตกร 100%", function(val)
+    if val then
+        for _, p in pairs(Players:GetPlayers()) do
+            if p ~= LocalPlayer and p.Character and (p.Character:FindFirstChild("Knife") or p.Backpack:FindFirstChild("Knife")) then
+                local gun = LocalPlayer.Character:FindFirstChild("Gun") or LocalPlayer.Backpack:FindFirstChild("Gun")
+                if gun then
+                    gun.Parent = LocalPlayer.Character
+                    task.wait(0.1)
+                    gun:Activate()
+                end
+            end
+        end
+    end
+end)
+
+-- ปาดครั้งเดียวหายยกเซิฟ (Kill All Server)
+createToggle(MM2Frame, 320, "สำหรับ MM2: ปาดครั้งเดียวหายยกเซิฟ", function(val)
+    if val then
+        local knife = LocalPlayer.Character:FindFirstChild("Knife") or LocalPlayer.Backpack:FindFirstChild("Knife")
+        if knife then
+            knife.Parent = LocalPlayer.Character
+            for _, p in pairs(Players:GetPlayers()) do
+                if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                    LocalPlayer.Character.HumanoidRootPart.CFrame = p.Character.HumanoidRootPart.CFrame
+                    task.wait(0.05)
+                    knife:Activate()
+                end
+            end
+        end
+    end
+end)
+
+print("[IU HUB] Executed Successfully!")
